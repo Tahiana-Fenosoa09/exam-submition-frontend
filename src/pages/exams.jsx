@@ -1,9 +1,11 @@
 import {useState} from "react";
 import ExamCard from '../components/examCard';
 import CreateExam from "../components/createExam";
+import Success from "../components/success";
 
 function Exam(){
     const [showCreateExam,setShowCreateExam] = useState(false);
+    const [created, setCreated] = useState(false);
     const [exams,setExams] = useState([
         {
             subject: "PROG2",
@@ -54,6 +56,8 @@ function Exam(){
     const createNewExam = () => {
         setShowCreateExam(prev => !prev);
     }
+
+
 
     return (
         <>

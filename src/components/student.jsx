@@ -1,5 +1,8 @@
     
+import Profile from "../pages/profile";
+
 function StudentCard({id,firstName,lastName,group,level,index}){
+
     return(
         <>
             <div className="w-full h-[10%] ">
