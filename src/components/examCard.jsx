@@ -2,7 +2,7 @@ import Photo from '../assets/algo.jfif'
 function ExamCard({subject,topic,duration,dueDate,createdAt,description}) {
     return (
         <>
-            <div className="w-[30vw] h-70 cols-span-1 bg-amber-200 p-2 flex flex-row rounded-2xl">
+            <div className="w-[30vw] h-70 cols-span-1 bg-gray-400 p-2 flex flex-row rounded-2xl">
                 <div className='w-[50%]  h-full flex flex-col  align-center'>
                     <img src={Photo} className='w-[80%] aspect-square rounded-full ' />
                     <h3 className='text-3xl font-bold '>{subject}</h3>

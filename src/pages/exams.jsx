@@ -1,6 +1,7 @@
 import {useState} from "react";
 import ExamCard from '../components/examCard';
 import CreateExam from "../components/createExam";
+
 function Exam(){
     const [showCreateExam,setShowCreateExam] = useState(false);
     const [exams,setExams] = useState([
@@ -51,16 +52,14 @@ function Exam(){
     ));
 
     const createNewExam = () => {
-        console.log(showCreateExam)
         setShowCreateExam(prev => !prev);
     }
 
     return (
         <>
             <div className='w-full h-full'>
-                <h3 className='text-2xl'>Exams</h3>
                 <div className=' w-full h-full flex flex-row flex-wrap gap-[2vw] p-2'>
-                    <div className="w-[30vw] h-70 cols-span-1 bg-amber-200 p-2 flex flex-row rounded-2xl" onClick={createNewExam}>
+                    <div className="w-[30vw] h-70 cols-span-1 bg-gray-400 p-2 flex flex-row justify-center items-center rounded-2xl" onClick={createNewExam}>
                         <h1 className='text-2xl font-bold'>Create New</h1>
                     </div>
                     { examGrid }
