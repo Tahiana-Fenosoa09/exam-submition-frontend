@@ -1,16 +1,13 @@
-import Login from './pages/login';
-import './App.css';
-import NavBar from './components/navbar';
-import { useState } from 'react';
-
+import "./App.css";
+import NavBar from "./components/navbar";
+import { AuthProvider } from "./context/authContext";
 
 function App() {
-
-  return (
-    <>
-      <NavBar />
-    </>
-  )
+    return (
+        <AuthProvider>
+            <NavBar />
+        </AuthProvider>
+    );
 }
 
 export default App;

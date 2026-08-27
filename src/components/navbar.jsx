@@ -1,74 +1,104 @@
-import { Routes , Route , NavLink} from "react-router";
+import { Routes, Route, NavLink, Navigate } from "react-router";
+import NotFound from "../pages/notFound";
+
 import Profile from "../pages/profile";
 import Home from "../pages/home";
 import Exam from "../pages/exams";
 import Student from "../pages/students";
 import Subject from "../pages/subjects";
-import NotFound from "../pages/notFound";
 
-function NavBar(){
-       const routes = [
-        {
-            to: "/profile",
-            pathName: "Profile"
-        },
-        {
-            to: "/home",
-            pathName: "Home"
-        }
-    ];
-
-    const routeChild = [
-        {
-            to: "students",
-            pathName: "Students",
-            element: <Student/>
-        },
-        {
-            to: "exams",
-            pathName: "Exams",
-            element: <Exam/>
-        },
-        {
-            to: "subjects",
-            pathName: "Subjects",
-            element: <Subject/>
-        },
-    ];
-
-    const links = routes.map((e) => { 
-            return <NavLink to={e.to} className={({isActive}) => isActive ? "text-2xl border-b-2" : "text-2xl "}>{e.pathName}</NavLink>
-    });
-
-  
-    const contentCHild = routeChild.map((e) => {
-        return <Route path={e.to} element={e.element}/>
-    });
-
-    return(
+function NavBar() {
+    return (
         <>
-            <nav className="h-[10vh] w-full bg-gray-400 flex place-content-between p-3" >  
-                <div className="flex gap-2">
-                    <div className="font-bold text-3xl ">Exam-submission</div>
+            <nav className="h-[10vh] w-full bg-gray-400 flex items-center justify-between p-3">
+
+                <div className="font-bold text-3xl">
+                    Exam-submission
                 </div>
+
                 <div className="flex gap-5">
-                    { links }
+
+                    <NavLink
+                        to="/profile"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "text-2xl border-b-2"
+                                : "text-2xl"
+                        }
+                    >
+                        Profile
+                    </NavLink>
+                    <NavLink
+                        to="/home"
+                        className={({ isActive }) =>
+                            isActive
+                                ? "text-2xl border-b-2"
+                                : "text-2xl"
+                        }
+                    >
+                        Home
+                    </NavLink>
+
+
                 </div>
-                <div className="gap-2 flex">
-                    <div className="h-[5vh] aspect-square rounded-3xl bg-white"></div>
-                    <div className="font-bold text-xl">Name</div>
+
+                <div className="flex items-center gap-2">
+
+                    <div className="h-[5vh] aspect-square rounded-full bg-white" />
+
+                    <div className="font-bold text-xl">
+                        User
+                    </div>
+
                 </div>
+
             </nav>
+
             <Routes>
-                <Route path="/home" element={<Home/>}>
-                    <Route index element={<Student />} />
-                    {contentCHild}
+
+                <Route
+                    path="/"
+                    element={<Navigate to="/home" replace />}
+                />
+
+                <Route
+                    path="/home"
+                    element={<Home />}
+                >
+                    <Route
+                        index
+                        element={<Navigate to="students" replace />}
+                    />
+
+                    <Route
+                        path="students"
+                        element={<Student />}
+                    />
+
+                    <Route
+                        path="exams"
+                        element={<Exam />}
+                    />
+
+                    <Route
+                        path="subjects"
+                        element={<Subject />}
+                    />
                 </Route>
-                <Route path="/profile" element={<Profile/>}/>
+
+                <Route
+                    path="/profile"
+                    element={<Profile />}
+                />
+
+                <Route
+                    path="*"
+                    element={<NotFound />}
+                />
+
             </Routes>
-        </> 
+        </>
     );
-    
 }
-    
+
 export default NavBar;

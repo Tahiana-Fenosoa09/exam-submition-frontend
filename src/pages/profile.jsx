@@ -4,11 +4,10 @@ function Profile({ profileType = 'personal', firstName = 'Goerge', group ='N3', 
 
     return (
         <>
-            {profileType == 'personal ' ? (
+            {profileType == 'personal' ? (
                 <>
                     <div className="w-full h-screen flex flex-col gap-5">
                         <h1 className="text-3xl font-bold text-center">Information</h1>
-                        {isOwner ? <h1>I am owner</h1> : null}
                         <div className="w-full h-auto p-1 flex gap-5 items-center">
                             <div className="w-[50%] h-full flex flex-col ">
                                 <div className="">
