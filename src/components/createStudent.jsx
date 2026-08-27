@@ -1,19 +1,20 @@
 import { useState } from "react";
 
-function CreateExam({setExams}) {
+function CreateStudent({setStudents}) {
     const [formResult, setFormResult] = useState({
-        subject: "",
-        topic: "",
-        duration: "",
-        dueDate: "",
-        createdAt: "",
-        description: ""
+        id: "",
+        firstName: "",
+        lastName: "",
+        group: "",
+        level: "",
+        isAdmin: "",
+        isOwner: ""
     });
 
 
     function submitForm(e) {
         e.preventDefault();
-        setExams(e => ([...e, formResult]));
+        setStudents(e => ([...e, formResult]));
     }
 
     return (
@@ -22,21 +23,21 @@ function CreateExam({setExams}) {
                 onSubmit={submitForm}
                 className="w-2xl h-[50vh] bg-white rounded-2xl shadow-2xl flex flex-col justify-between gap-1.5 absolute top-3/12 left-1/4 p-2"
             >
-                <h1 className="text-2xl font-bold text-center">Create new Exam</h1>
+                <h1 className="text-2xl font-bold text-center">Create Student</h1>
                 <div className="w-full h-auto flex gap-2">
                     <div className="w-[50%]">
                         <label >
-                            <h3 className="text-xl">Subject</h3>
+                            <h3 className="text-xl">id</h3>
                         </label>
                         <input
                             type="text"
-                            placeholder="subject"
+                            placeholder="id"
                             className="border-2 p-1 w-full"
-                            value={formResult.subject}
+                            value={formResult.id}
                             onChange={(e) => {
                                 setFormResult(previousForm => ({
                                     ...previousForm,
-                                    subject: e.target.value
+                                    id: e.target.value
                                 }));
                             }}
                         />
@@ -44,17 +45,17 @@ function CreateExam({setExams}) {
 
                     <div className="w-[50%]">
                         <label >
-                            <h3 className="text-xl">Topic</h3>
+                            <h3 className="text-xl">first-name</h3>
                         </label>
                         <input
                             type="text"
-                            placeholder="topic"
+                            placeholder="first-name"
                             className="border-2 p-1 w-full"
-                            value={formResult.topic}
+                            value={formResult.firstName}
                             onChange={(e) => {
                                 setFormResult(previousForm => ({
                                     ...previousForm,
-                                    topic: e.target.value
+                                    firstName: e.target.value
                                 }));
                             }}
                         />
@@ -64,17 +65,17 @@ function CreateExam({setExams}) {
                 <div className="w-full h-auto flex gap-2">
                     <div className="w-[50%]">
                         <label >
-                            <h3 className="text-xl">Duration</h3>
+                            <h3 className="text-xl">last-name</h3>
                         </label>
                         <input
                             type="text"
-                            placeholder="duration"
+                            placeholder="last-name"
                             className="border-2 p-1 w-full"
-                            value={formResult.duration}
+                            value={formResult.lastName}
                             onChange={(e) => {
                                 setFormResult(previousForm => ({
                                     ...previousForm,
-                                    duration: e.target.value
+                                    lastName: e.target.value
                                 }));
                             }}
                         />
@@ -82,17 +83,17 @@ function CreateExam({setExams}) {
 
                     <div className="w-[50%]">
                         <label >
-                            <h3 className="text-xl">Due to</h3>
+                            <h3 className="text-xl">group</h3>
                         </label>
                         <input
                             type="text"
-                            placeholder="due to"
+                            placeholder="group"
                             className="border-2 p-1 w-full"
-                            value={formResult.dueDate}
+                            value={formResult.group}
                             onChange={(e) => {
                                 setFormResult(previousForm => ({
                                     ...previousForm,
-                                    dueDate: e.target.value
+                                    group: e.target.value
                                 }));
                             }}
                         />
@@ -102,17 +103,17 @@ function CreateExam({setExams}) {
                 <div className="w-full h-auto flex gap-2">
                     <div className="w-[50%]">
                         <label >
-                            <h3 className="text-xl">Created At</h3>
+                            <h3 className="text-xl">Level</h3>
                         </label>
                         <input
                             type="text"
-                            placeholder="created at"
+                            placeholder="level"
                             className="border-2 p-1 w-full"
-                            value={formResult.createdAt}
+                            value={formResult.level}
                             onChange={(e) => {
                                 setFormResult(previousForm => ({
                                     ...previousForm,
-                                    createdAt: e.target.value
+                                    level: e.target.value
                                 }));
                             }}
                         />
@@ -120,22 +121,40 @@ function CreateExam({setExams}) {
 
                     <div className="w-[50%]">
                         <label >
-                            <h3 className="text-xl">Description</h3>
+                            <h3 className="text-xl">isAdmin</h3>
                         </label>
                         <input
                             type="text"
-                            placeholder="description"
+                            placeholder="isAdmin"
                             className="border-2 p-1 w-full"
-                            value={formResult.description}
+                            value={formResult.isAdmin}
                             onChange={(e) => {
                                 setFormResult(previousForm => ({
                                     ...previousForm,
-                                    description: e.target.value
+                                    isAdmin: e.target.value
                                 }));
                             }}
                         />
                     </div>
                 </div>
+
+                <div className="w-full">
+                        <label >
+                            <h3 className="text-xl">Owner</h3>
+                        </label>
+                        <input
+                            type="text"
+                            placeholder="owner"
+                            className="border-2 p-1 w-full"
+                            value={formResult.isOwner}
+                            onChange={(e) => {
+                                setFormResult(previousForm => ({
+                                    ...previousForm,
+                                    isOwner: e.target.value
+                                }));
+                            }}
+                        />
+                    </div>
 
                 <div className="w-full h-auto flex justify-center items-center">
 
@@ -151,4 +170,4 @@ function CreateExam({setExams}) {
     );
 }
 
-export default CreateExam;
+export default CreateStudent;

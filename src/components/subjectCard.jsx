@@ -1,5 +1,7 @@
 import Photo from '../assets/algo.jfif'
 function SubjectCard({subject,topic,credit,level,description}) {
+    
+
     return (
         <>
             <div className="w-[30vw] h-70 cols-span-1 bg-gray-400 p-2 flex flex-row rounded-2xl">

@@ -1,17 +1,16 @@
 import Login from './pages/login';
-import Home from './pages/home';
-import Profile from './pages/profile';
 import './App.css';
 import NavBar from './components/navbar';
+import { useState } from 'react';
 
 
 function App() {
 
   return (
-    <>                 
-      <NavBar/>
+    <>
+      <NavBar />
     </>
   )
 }
 
-export default App
+export default App;

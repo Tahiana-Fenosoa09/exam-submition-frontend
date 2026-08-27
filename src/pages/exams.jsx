@@ -62,13 +62,13 @@ function Exam(){
     return (
         <>
             <div className='w-full h-full'>
-                <div className=' w-full h-full flex flex-row flex-wrap gap-[2vw] p-2'>
+                <div className=' w-full h-full flex flex-row flex-wrap  items-center gap-[2vw] p-2'>
                     <div className="w-[30vw] h-70 cols-span-1 bg-gray-400 p-2 flex flex-row justify-center items-center rounded-2xl" onClick={createNewExam}>
                         <h1 className='text-2xl font-bold'>Create New</h1>
                     </div>
                     { examGrid }
                 </div>
-                {showCreateExam ? <CreateExam/> : null}
+                {showCreateExam ? <CreateExam setExams={setExams}/> : null}
             </div>
         </>
     );
