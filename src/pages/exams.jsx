@@ -1,6 +1,6 @@
 import {useState} from "react";
 import ExamCard from '../components/examCard';
-import CreateExam from "../components/createExam";
+import CreateExam from "../components/createExamCard";
 import Success from "../components/success";
 
 function Exam(){

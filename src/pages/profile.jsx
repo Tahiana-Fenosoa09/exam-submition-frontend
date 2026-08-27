@@ -1,27 +1,37 @@
-import Exam from "./exams";
+import Exam from "../pages/exams";
 function Profile() {
 
     return (
         <>
-            <div className="w-full h-screen">
-                <div className="w-full h-[40%]">
-                    <div className="w-full h-[70%] bg-gray-200">
-                        <div className="w-40 aspect-square rounded-4xl bg-gray-400 absolute top-30 left-3"></div>
+            <div className="w-full h-screen flex flex-col gap-5">
+                    <h1 className="text-3xl font-bold text-center">Information</h1>
+                <div className="w-full h-auto p-1 flex gap-5 items-center">
+                    <div className="w-[50%] h-full flex flex-col ">
+                        <div className="">
+                            <h1 className="text-xl font-bold text-white bg-gray-400 p-2">Name</h1>
+                            <p className="text-xl ">Hello</p>
+                        </div>
+                        <div>
+                            <h1 className="text-xl font-bold text-white  bg-gray-400 p-2">Group</h1>
+                            <p className="text-xl">Hello</p>
+                        </div>
+                    </div>
+                    <div  className="w-[50%] h-full flex flex-col ">
+                        <div>
+                            <h1 className="text-xl font-bold text-white bg-gray-400 p-2">Level</h1>
+                            <p className="text-xl">Hello</p>
+                        </div>
+                        <div>
+                            <h1 className="text-xl font-bold text-white  bg-gray-400 p-2">Id</h1>
+                            <p className="text-xl">Hello</p>
+                        </div>
                     </div>
                 </div>
-                <div>
-                    <h1 className="text-3xl font-bold">Rasamoelimihamina Tahiana fenosoa</h1>
-                    <h3 className="text-xl font-bold">Group: N3</h3>
-                    <h3 className="text-xl font-bold">Level: L1</h3>
-                    <h3 className="text-xl font-bold">Id: 2345</h3>
-                </div>
-                <div className="w-full h-auto ">
-                    <h1 className="text-3xl font-bold border-b-2">Exams</h1>
-                  <Exam/>
-                </div>
-                {/* <div className="h-10 aspect-square p-2 absolute top-2 left-2 text-black">
-                    <p>back</p>
-                </div> */}
+                    <div className="w-full h-auto ">
+                        <h1 className="text-3xl font-bold text-center">Exams</h1>
+                         <Exam />
+                    </div>
+                    {/* { !isOwner ? < Back /> : null } */}
             </div>
         </>
     );

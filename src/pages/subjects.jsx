@@ -1,6 +1,6 @@
 import { useState } from "react";
-import SubjectCard from '../components/subject';
-import CreateExam from "../components/createExam";
+import SubjectCard from '../components/subjectCard';
+import CreateExam from "../components/createExamCard";
 
 
 function Subject() {

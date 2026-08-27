@@ -4,7 +4,7 @@ import Home from "../pages/home";
 import Exam from "../pages/exams";
 import Student from "../pages/students";
 import Subject from "../pages/subjects";
-
+import NotFound from "../pages/notFound";
 
 function NavBar(){
        const routes = [
@@ -33,11 +33,11 @@ function NavBar(){
             to: "subjects",
             pathName: "Subjects",
             element: <Subject/>
-        }
+        },
     ];
 
     const links = routes.map((e) => { 
-        return <NavLink to={e.to} className={({isActive}) => isActive ? "text-2xl border-b-2" : "text-2xl "}>{e.pathName}</NavLink>
+            return <NavLink to={e.to} className={({isActive}) => isActive ? "text-2xl border-b-2" : "text-2xl "}>{e.pathName}</NavLink>
     });
 
   
@@ -49,18 +49,19 @@ function NavBar(){
         <>
             <nav className="h-[10vh] w-full bg-gray-400 flex place-content-between p-3" >  
                 <div className="flex gap-2">
-                    <div className="font-bold text-2xl ">Exam-submission</div>
+                    <div className="font-bold text-3xl ">Exam-submission</div>
                 </div>
                 <div className="flex gap-5">
                     { links }
                 </div>
                 <div className="gap-2 flex">
                     <div className="h-[5vh] aspect-square rounded-3xl bg-white"></div>
-                    <div className="font-bold text-2xl">Name</div>
+                    <div className="font-bold text-xl">Name</div>
                 </div>
             </nav>
             <Routes>
                 <Route path="/home" element={<Home/>}>
+                    <Route index element={<Student />} />
                     {contentCHild}
                 </Route>
                 <Route path="/profile" element={<Profile/>}/>

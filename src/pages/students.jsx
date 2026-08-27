@@ -1,35 +1,46 @@
-import StudentCard from "../components/student";
+import { useParams } from "react-router";
+import StudentCard from "../components/studentCard";
 import { useState } from "react";
 
 function Student() {
     const [students, setStudents] = useState([
         {
-            id: 1234,
+            id: 1,
             firstName: 'Steevey',
             lastName: 'Rakoto',
             group: 'N3',
-            level: 'L1'
+            level: 'L1',
+            role: 'student'
         },
         {
-            id: 1221,
+            id: 2,
             firstName: 'Prudence',
             lastName: 'RaJean',
             group: 'N3',
-            level: 'L1'
+            level: 'L1',
+            role: 'student'
         }, {
-            id: 1233,
+            id: 3,
             firstName: 'Stanley',
             lastName: 'Shang',
             group: 'N3',
-            level: 'L1'
+            level: 'L1',
+            role: 'student'
         }, {
-            id: 1223,
+            id: 4,
             firstName: 'Junioh',
             lastName: 'Ok',
             group: 'N3',
-            level: 'L1'
+            level: 'L1',
+            role: 'student'
         }
     ]);
+
+    const { userId } = useParams();
+
+    const dataToFind = students.find( student => students.id == userId);
+    
+    
     return (
         <>
             <div className="">
@@ -53,7 +64,7 @@ function Student() {
                             </li>
                         </ul>
                     </div>
-                    {students.map((e,index) => <StudentCard id={e.id} firstName={e.firstName} lastName={e.lastName} group={e.group} level={e.level} index={index}/>)}
+                    {students.map((e,index) => <StudentCard key={e.id} id={e.id} firstName={e.firstName} lastName={e.lastName} group={e.group} level={e.level} index={index}/>)}
                 </div>
             </div>
         </>
