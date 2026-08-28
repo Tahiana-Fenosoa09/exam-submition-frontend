@@ -1,75 +1,125 @@
-import { useParams } from "react-router";
+import { useState, useEffect, useCallback } from "react";
 import StudentCard from "../components/studentCard";
-import { useState } from "react";
+import StudentFormModal from "../components/studentFormModal";
+import ConfirmDialog from "../components/confirmDialog";
+import { useAuth } from "../context/useAuth";
+import { fetchStudents, createStudent, updateStudent, deleteStudent } from "../services/usersService";
 
 function Student() {
-    const [students, setStudents] = useState([
-        {
-            id: 1,
-            firstName: 'Steevey',
-            lastName: 'Rakoto',
-            group: 'N3',
-            level: 'L1',
-            role: 'student'
-        },
-        {
-            id: 2,
-            firstName: 'Prudence',
-            lastName: 'RaJean',
-            group: 'N3',
-            level: 'L1',
-            role: 'student'
-        }, {
-            id: 3,
-            firstName: 'Stanley',
-            lastName: 'Shang',
-            group: 'N3',
-            level: 'L1',
-            role: 'student'
-        }, {
-            id: 4,
-            firstName: 'Junioh',
-            lastName: 'Ok',
-            group: 'N3',
-            level: 'L1',
-            role: 'student'
+    const { isAdmin } = useAuth();
+    const [students, setStudents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState("");
+
+    const [editingStudent, setEditingStudent] = useState(null); 
+    const [showCreateForm, setShowCreateForm] = useState(false);
+    const [studentToDelete, setStudentToDelete] = useState(null);
+
+    const loadStudents = useCallback(async () => {
+        setLoading(true);
+        setError("");
+        try {
+            const data = await fetchStudents();
+            setStudents(data);
+        } catch {
+            setError("Impossible de charger la liste des étudiants. Le backend est-il démarré ?");
+        } finally {
+            setLoading(false);
         }
-    ]);
+    }, []);
 
-    const { userId } = useParams();
+    useEffect(() => {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- chargement initial des données, pattern standard
+        loadStudents();
+    }, [loadStudents]);
 
-    const dataToFind = students.find( student => students.id == userId);
-    
-    
+    async function handleCreate(form) {
+        await createStudent(form);
+        setShowCreateForm(false);
+        loadStudents();
+    }
+
+    async function handleUpdate(form) {
+        await updateStudent(editingStudent.id, form);
+        setEditingStudent(null);
+        loadStudents();
+    }
+
+    async function handleDelete() {
+        await deleteStudent(studentToDelete.id);
+        setStudentToDelete(null);
+        loadStudents();
+    }
+
     return (
-        <>
-            <div className="">
-                <div className="w-full h-full flex-col">
-                    <div className="w-full h-[10%] bg-gray-400 rounded-xl">
-                        <ul className="w-full h-full p-2 grid grid-cols-5">
-                            <li>
-                                <p className="font-medium">id</p>
-                            </li>
-                            <li>
-                                <p className="font-medium">First-Name</p>
-                            </li>
-                            <li>
-                                <p className="font-medium">Last-Name</p>
-                            </li>
-                            <li>
-                                <p className="font-medium">Group</p>
-                            </li>
-                            <li>
-                                <p className="font-medium">Level</p>
-                            </li>
-                        </ul>
-                    </div>
-                    {students.map((e,index) => <StudentCard key={e.id} id={e.id} firstName={e.firstName} lastName={e.lastName} group={e.group} level={e.level} index={index}/>)}
+        <div className="w-full h-full flex flex-col gap-3">
+            {isAdmin && (
+                <div className="flex justify-end">
+                    <button
+                        onClick={() => setShowCreateForm(true)}
+                        className="bg-black text-white font-bold rounded-xl px-4 py-2"
+                    >
+                        + Créer un étudiant
+                    </button>
                 </div>
-            </div>
-        </>
-    );
+            )}
 
+            {error && <p className="text-red-600">{error}</p>}
+            {loading && <p>Chargement...</p>}
+
+            {!loading && !error && (
+                <div className="w-full flex-col">
+                    <div className="w-full h-auto bg-gray-400 rounded-xl">
+                        <div className="w-full p-2 grid grid-cols-6">
+                            <p className="font-medium">id</p>
+                            <p className="font-medium">Nom</p>
+                            <p className="font-medium">Email</p>
+                            <p className="font-medium">Statut</p>
+                            <p className="font-medium col-span-2">Actions</p>
+                        </div>
+                    </div>
+                    {students.length === 0 && <p className="p-2 text-gray-500">Aucun étudiant pour le moment.</p>}
+                    {students.map((s, index) => (
+                        <StudentCard
+                            key={s.id}
+                            id={s.id}
+                            fullName={s.fullName}
+                            email={s.email}
+                            isActive={s.isActive}
+                            index={index}
+                            onEdit={() => setEditingStudent(s)}
+                            onDelete={() => setStudentToDelete(s)}
+                        />
+                    ))}
+                </div>
+            )}
+
+            {showCreateForm && (
+                <StudentFormModal
+                    onSubmit={handleCreate}
+                    onCancel={() => setShowCreateForm(false)}
+                />
+            )}
+
+            {editingStudent && (
+                <StudentFormModal
+                    studentToEdit={editingStudent}
+                    onSubmit={handleUpdate}
+                    onCancel={() => setEditingStudent(null)}
+                />
+            )}
+
+            {studentToDelete && (
+                <ConfirmDialog
+                    title="Supprimer cet étudiant ?"
+                    message={`${studentToDelete.fullName} sera définitivement supprimé.`}
+                    confirmLabel="Supprimer"
+                    onConfirm={handleDelete}
+                    onCancel={() => setStudentToDelete(null)}
+                />
+            )}
+        </div>
+    );
 }
 
 export default Student;

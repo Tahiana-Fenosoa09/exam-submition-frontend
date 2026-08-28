@@ -1,74 +1,48 @@
-import { Routes , Route , NavLink} from "react-router";
-import Profile from "../pages/profile";
-import Home from "../pages/home";
-import Exam from "../pages/exams";
-import Student from "../pages/students";
-import Subject from "../pages/subjects";
-import NotFound from "../pages/notFound";
+import { NavLink, useNavigate } from "react-router";
+import { useAuth } from "../context/useAuth";
 
-function NavBar(){
-       const routes = [
-        {
-            to: "/profile",
-            pathName: "Profile"
-        },
-        {
-            to: "/home",
-            pathName: "Home"
-        }
+function NavBar() {
+    const { user, logout } = useAuth();
+    const navigate = useNavigate();
+
+    const routes = [
+        { to: "/profile", pathName: "Profile" },
+        { to: "/home", pathName: "Home" },
     ];
 
-    const routeChild = [
-        {
-            to: "students",
-            pathName: "Students",
-            element: <Student/>
-        },
-        {
-            to: "exams",
-            pathName: "Exams",
-            element: <Exam/>
-        },
-        {
-            to: "subjects",
-            pathName: "Subjects",
-            element: <Subject/>
-        },
-    ];
+    const links = routes.map((e) => (
+        <NavLink
+            key={e.to}
+            to={e.to}
+            className={({ isActive }) => (isActive ? "text-2xl border-b-2" : "text-2xl")}
+        >
+            {e.pathName}
+        </NavLink>
+    ));
 
-    const links = routes.map((e) => { 
-            return <NavLink to={e.to} className={({isActive}) => isActive ? "text-2xl border-b-2" : "text-2xl "}>{e.pathName}</NavLink>
-    });
+    function handleLogout() {
+        logout();
+        navigate("/login");
+    }
 
-  
-    const contentCHild = routeChild.map((e) => {
-        return <Route path={e.to} element={e.element}/>
-    });
-
-    return(
-        <>
-            <nav className="h-[10vh] w-full bg-gray-400 flex place-content-between p-3" >  
-                <div className="flex gap-2">
-                    <div className="font-bold text-3xl ">Exam-submission</div>
-                </div>
-                <div className="flex gap-5">
-                    { links }
-                </div>
-                <div className="gap-2 flex">
-                    <div className="h-[5vh] aspect-square rounded-3xl bg-white"></div>
-                    <div className="font-bold text-xl">Name</div>
-                </div>
-            </nav>
-            <Routes>
-                <Route path="/home" element={<Home/>}>
-                    <Route index element={<Student />} />
-                    {contentCHild}
-                </Route>
-                <Route path="/profile" element={<Profile/>}/>
-            </Routes>
-        </> 
+    return (
+        <nav className="h-[10vh] w-full bg-gray-400 flex place-content-between p-3">
+            <div className="flex gap-2">
+                <div className="font-bold text-3xl">Exam-submission</div>
+            </div>
+            <div className="flex gap-5 items-center">{links}</div>
+            <div className="gap-3 flex items-center">
+                <div className="h-[5vh] aspect-square rounded-3xl bg-white"></div>
+                <div className="font-bold text-xl">{user?.email}</div>
+                <button
+                    onClick={handleLogout}
+                    className="font-bold text-sm bg-black text-white rounded-lg px-3 py-1"
+                >
+                    Logout
+                </button>
+            </div>
+        </nav>
     );
-    
 }
-    
+
 export default NavBar;
