@@ -1,72 +1,143 @@
 import { useState } from "react";
 import ExamCard from "../components/examCard";
 import CreateExam from "../components/createExamCard";
+import CreateQcm from "../components/createQcm";
 import Modal from "../components/modal";
 import PermissionGate from "../components/PermissionGate";
 import { Success } from "../components/feedBack";
+import {
+    getExams,
+    saveExams
+} from "../utils/examStorage";
+
+const initialExams = [
+    {
+        id: 1,
+        courseId: 1,
+        title: "Encapsulation",
+        description:
+            "A simple QCM about encapsulation.",
+        startsAt: "2026-09-01T10:00",
+        endsAt: "2026-09-01T12:00",
+        numberOfQuestion: 3,
+        questions: []
+    },
+    {
+        id: 2,
+        courseId: 3,
+        title: "Data organisation",
+        description:
+            "A test about data organisation.",
+        startsAt: "2026-09-03T10:00",
+        endsAt: "2026-09-03T12:00",
+        numberOfQuestion: 2,
+        questions: []
+    }
+];
 
 function Exam() {
-    const [exams, setExams] = useState([
-        {
-            id: 1,
-            courseId: 1,
-            title: "Encapsulation",
-            description:
-                "A simple QCM about encapsulation.",
-            startsAt: "2026-09-01T10:00",
-            endsAt: "2026-09-01T12:00"
-        },
-        {
-            id: 2,
-            courseId: 3,
-            title: "Data organisation",
-            description:
-                "A test about data organisation.",
-            startsAt: "2026-09-03T10:00",
-            endsAt: "2026-09-03T12:00"
-        }
-    ]);
+    const [exams, setExams] = useState(() => {
+        const saved = getExams();
 
-    const [showCreate, setShowCreate] = useState(false);
-    const [editingExam, setEditingExam] = useState(null);
-    const [message, setMessage] = useState("");
+        if (saved.length) {
+            return saved;
+        }
+
+        saveExams(initialExams);
+
+        return initialExams;
+    });
+
+    const [showCreate, setShowCreate] =
+        useState(false);
+
+    const [editingExam, setEditingExam] =
+        useState(null);
+
+    const [editingQcm, setEditingQcm] =
+        useState(null);
+
+    const [message, setMessage] =
+        useState("");
+
+    function updateExams(nextExams) {
+        setExams(nextExams);
+        saveExams(nextExams);
+    }
 
     function createExam(exam) {
-        setExams(previous => [
-            ...previous,
-            {
-                ...exam,
-                id: Date.now()
-            }
+        const newExam = {
+            ...exam,
+            id: Date.now(),
+            questions: []
+        };
+
+        updateExams([
+            ...exams,
+            newExam
         ]);
 
         setShowCreate(false);
-        setMessage("Exam created successfully.");
+        setMessage(
+            "Exam created successfully."
+        );
     }
 
     function updateExam(exam) {
-        setExams(previous =>
-            previous.map(item =>
-                item.id === exam.id
-                    ? exam
-                    : item
-            )
+        const next = exams.map(item =>
+            item.id === exam.id
+                ? {
+                      ...item,
+                      ...exam
+                  }
+                : item
         );
 
+        updateExams(next);
+
         setEditingExam(null);
-        setMessage("Exam updated successfully.");
+        setMessage(
+            "Exam updated successfully."
+        );
+    }
+
+    function saveQcm(questions) {
+        const next = exams.map(exam =>
+            exam.id === editingQcm.id
+                ? {
+                      ...exam,
+                      questions
+                  }
+                : exam
+        );
+
+        updateExams(next);
+
+        setEditingQcm(null);
+
+        setMessage(
+            "QCM saved successfully."
+        );
     }
 
     function deleteExam(id) {
-        if (!window.confirm("Delete this exam?")) {
+        if (
+            !window.confirm(
+                "Delete this exam?"
+            )
+        ) {
             return;
         }
 
-        setExams(previous =>
-            previous.filter(exam => exam.id !== id)
+        const next = exams.filter(
+            exam => exam.id !== id
         );
 
-        setMessage("Exam deleted successfully.");
+        updateExams(next);
+
+        setMessage(
+            "Exam deleted successfully."
+        );
     }
 
     return (
@@ -84,7 +155,9 @@ function Exam() {
                 >
                     <button
                         type="button"
-                        onClick={() => setShowCreate(true)}
+                        onClick={() =>
+                            setShowCreate(true)
+                        }
                         className="bg-black text-white px-5 py-3 rounded-xl font-bold"
                     >
                         Create New
@@ -95,7 +168,9 @@ function Exam() {
 
             {message && (
                 <div className="mb-4">
-                    <Success message={message} />
+                    <Success
+                        message={message}
+                    />
                 </div>
             )}
 
@@ -105,8 +180,15 @@ function Exam() {
                     <ExamCard
                         key={exam.id}
                         exam={exam}
-                        onEdit={setEditingExam}
-                        onDelete={deleteExam}
+                        onEdit={
+                            setEditingExam
+                        }
+                        onEditQcm={
+                            setEditingQcm
+                        }
+                        onDelete={
+                            deleteExam
+                        }
                     />
                 ))}
 
@@ -114,23 +196,48 @@ function Exam() {
 
             <Modal
                 open={showCreate}
-                onClose={() => setShowCreate(false)}
+                onClose={() =>
+                    setShowCreate(false)
+                }
             >
                 <CreateExam
                     onSubmit={createExam}
-                    onCancel={() => setShowCreate(false)}
+                    onCancel={() =>
+                        setShowCreate(false)
+                    }
                 />
             </Modal>
 
             <Modal
                 open={Boolean(editingExam)}
-                onClose={() => setEditingExam(null)}
+                onClose={() =>
+                    setEditingExam(null)
+                }
             >
                 {editingExam && (
                     <CreateExam
                         exam={editingExam}
                         onSubmit={updateExam}
-                        onCancel={() => setEditingExam(null)}
+                        onCancel={() =>
+                            setEditingExam(null)
+                        }
+                    />
+                )}
+            </Modal>
+
+            <Modal
+                open={Boolean(editingQcm)}
+                onClose={() =>
+                    setEditingQcm(null)
+                }
+            >
+                {editingQcm && (
+                    <CreateQcm
+                        exam={editingQcm}
+                        onSubmit={saveQcm}
+                        onCancel={() =>
+                            setEditingQcm(null)
+                        }
                     />
                 )}
             </Modal>

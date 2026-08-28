@@ -10,7 +10,8 @@ function CreateExam({
         title: exam?.title ?? "",
         description: exam?.description ?? "",
         startsAt: exam?.startsAt ?? "",
-        endsAt: exam?.endsAt ?? ""
+        endsAt: exam?.endsAt ?? "",
+        numberOfQuestion: exam?.numberOfQuestion ?? 1
     });
 
     const [error, setError] = useState("");
@@ -50,6 +51,19 @@ function CreateExam({
             return;
         }
 
+        const numberOfQuestion =
+            Number(form.numberOfQuestion);
+
+        if (
+            !Number.isInteger(numberOfQuestion) ||
+            numberOfQuestion < 1
+        ) {
+            setError(
+                "Number of questions must be at least 1."
+            );
+            return;
+        }
+
         setError("");
 
         onSubmit({
@@ -58,7 +72,8 @@ function CreateExam({
             title: form.title.trim(),
             description: form.description.trim(),
             startsAt: form.startsAt,
-            endsAt: form.endsAt
+            endsAt: form.endsAt,
+            numberOfQuestion
         });
     }
 
@@ -87,6 +102,7 @@ function CreateExam({
                 <input
                     name="courseId"
                     type="number"
+                    min="1"
                     value={form.courseId}
                     onChange={handleChange}
                     className="border-2 p-2 w-full rounded-xl"
@@ -121,7 +137,6 @@ function CreateExam({
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-
                 <div>
                     <label className="font-bold">
                         Starts at
@@ -149,16 +164,31 @@ function CreateExam({
                         className="border-2 p-2 w-full rounded-xl"
                     />
                 </div>
+            </div>
 
+            <div>
+                <label className="font-bold">
+                    Number of questions
+                </label>
+
+                <input
+                    name="numberOfQuestion"
+                    type="number"
+                    min="1"
+                    value={form.numberOfQuestion}
+                    onChange={handleChange}
+                    className="border-2 p-2 w-full rounded-xl"
+                />
             </div>
 
             <div className="flex gap-3">
-
                 <button
                     type="submit"
                     className="flex-1 bg-black text-white py-3 rounded-xl font-bold"
                 >
-                    {isEditing ? "Save Changes" : "Create Exam"}
+                    {isEditing
+                        ? "Save Changes"
+                        : "Create Exam"}
                 </button>
 
                 <button
@@ -168,9 +198,7 @@ function CreateExam({
                 >
                     Cancel
                 </button>
-
             </div>
-
         </form>
     );
 }
