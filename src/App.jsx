@@ -1,17 +1,13 @@
-import Login from './pages/login';
-import Home from './pages/home';
-import Profile from './pages/profile';
-import './App.css';
-import NavBar from './components/navbar';
-
+import "./App.css";
+import NavBar from "./components/navbar";
+import { AuthProvider } from "./context/authContext";
 
 function App() {
-
-  return (
-    <>                 
-      <NavBar/>
-    </>
-  )
+    return (
+        <AuthProvider>
+            <NavBar />
+        </AuthProvider>
+    );
 }
 
-export default App
+export default App;

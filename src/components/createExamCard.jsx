@@ -1,161 +1,177 @@
 import { useState } from "react";
 
-function CreateExam() {
-    const [formResult, setFormResult] = useState({
-        subject: "",
-        topic: "",
-        duration: "",
-        dueDate: "",
-        createdAt: "",
-        description: ""
+function CreateExam({
+    exam = null,
+    onSubmit,
+    onCancel
+}) {
+    const [form, setForm] = useState({
+        courseId: exam?.courseId ?? "",
+        title: exam?.title ?? "",
+        description: exam?.description ?? "",
+        startsAt: exam?.startsAt ?? "",
+        endsAt: exam?.endsAt ?? ""
     });
 
-    // const allForms = [
-    //     {
-    //         title: "Subject",
-    //         assignedValue: formResult.subject,
-    //         inputType: "text",
+    const [error, setError] = useState("");
 
-    //     }
-    // ]
+    const isEditing = Boolean(exam);
 
+    function handleChange(event) {
+        setForm(previous => ({
+            ...previous,
+            [event.target.name]: event.target.value
+        }));
+    }
 
-    function submitForm(e) {
-        e.preventDefault();
+    function submitForm(event) {
+        event.preventDefault();
+
+        if (!form.courseId) {
+            setError("Course is required.");
+            return;
+        }
+
+        if (!form.title.trim()) {
+            setError("Exam title is required.");
+            return;
+        }
+
+        if (!form.startsAt || !form.endsAt) {
+            setError("Start and end dates are required.");
+            return;
+        }
+
+        if (
+            new Date(form.startsAt) >=
+            new Date(form.endsAt)
+        ) {
+            setError("The exam must start before it ends.");
+            return;
+        }
+
+        setError("");
+
+        onSubmit({
+            ...(exam ?? {}),
+            courseId: Number(form.courseId),
+            title: form.title.trim(),
+            description: form.description.trim(),
+            startsAt: form.startsAt,
+            endsAt: form.endsAt
+        });
     }
 
     return (
-        <>
-            <form
-                onSubmit={submitForm}
-                className="w-2xl h-[50vh] bg-white rounded-2xl shadow-2xl flex flex-col justify-between gap-1.5 absolute top-3/12 left-1/4 p-2"
-            >
-                <h1 className="text-2xl font-bold text-center">Create new Exam</h1>
-                <div className="w-full h-auto flex gap-2">
-                    <div className="w-[50%]">
-                        <label >
-                            <h3 className="text-xl">Subject</h3>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="subject"
-                            className="border-2 p-1 w-full"
-                            value={formResult.subject}
-                            onChange={(e) => {
-                                setFormResult(previousForm => ({
-                                    ...previousForm,
-                                    subject: e.target.value
-                                }));
-                            }}
-                        />
-                    </div>
+        <form
+            onSubmit={submitForm}
+            className="flex flex-col gap-5"
+        >
+            <h1 className="text-3xl font-bold text-center">
+                {isEditing
+                    ? "Edit Exam"
+                    : "Create Exam"}
+            </h1>
 
-                    <div className="w-[50%]">
-                        <label >
-                            <h3 className="text-xl">Topic</h3>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="topic"
-                            className="border-2 p-1 w-full"
-                            value={formResult.topic}
-                            onChange={(e) => {
-                                setFormResult(previousForm => ({
-                                    ...previousForm,
-                                    topic: e.target.value
-                                }));
-                            }}
-                        />
-                    </div>
+            {error && (
+                <div className="bg-red-500 text-white p-3 rounded-xl">
+                    {error}
+                </div>
+            )}
+
+            <div>
+                <label className="font-bold">
+                    Course ID
+                </label>
+
+                <input
+                    name="courseId"
+                    type="number"
+                    value={form.courseId}
+                    onChange={handleChange}
+                    className="border-2 p-2 w-full rounded-xl"
+                />
+            </div>
+
+            <div>
+                <label className="font-bold">
+                    Title
+                </label>
+
+                <input
+                    name="title"
+                    value={form.title}
+                    onChange={handleChange}
+                    className="border-2 p-2 w-full rounded-xl"
+                    placeholder="Object Oriented Programming Exam"
+                />
+            </div>
+
+            <div>
+                <label className="font-bold">
+                    Description
+                </label>
+
+                <textarea
+                    name="description"
+                    value={form.description}
+                    onChange={handleChange}
+                    className="border-2 p-2 w-full rounded-xl min-h-24"
+                />
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+
+                <div>
+                    <label className="font-bold">
+                        Starts at
+                    </label>
+
+                    <input
+                        name="startsAt"
+                        type="datetime-local"
+                        value={form.startsAt}
+                        onChange={handleChange}
+                        className="border-2 p-2 w-full rounded-xl"
+                    />
                 </div>
 
-                <div className="w-full h-auto flex gap-2">
-                    <div className="w-[50%]">
-                        <label >
-                            <h3 className="text-xl">Duration</h3>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="duration"
-                            className="border-2 p-1 w-full"
-                            value={formResult.duration}
-                            onChange={(e) => {
-                                setFormResult(previousForm => ({
-                                    ...previousForm,
-                                    duration: e.target.value
-                                }));
-                            }}
-                        />
-                    </div>
+                <div>
+                    <label className="font-bold">
+                        Ends at
+                    </label>
 
-                    <div className="w-[50%]">
-                        <label >
-                            <h3 className="text-xl">Due to</h3>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="due to"
-                            className="border-2 p-1 w-full"
-                            value={formResult.dueDate}
-                            onChange={(e) => {
-                                setFormResult(previousForm => ({
-                                    ...previousForm,
-                                    dueDate: e.target.value
-                                }));
-                            }}
-                        />
-                    </div>
+                    <input
+                        name="endsAt"
+                        type="datetime-local"
+                        value={form.endsAt}
+                        onChange={handleChange}
+                        className="border-2 p-2 w-full rounded-xl"
+                    />
                 </div>
 
-                <div className="w-full h-auto flex gap-2">
-                    <div className="w-[50%]">
-                        <label >
-                            <h3 className="text-xl">Created At</h3>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="created at"
-                            className="border-2 p-1 w-full"
-                            value={formResult.createdAt}
-                            onChange={(e) => {
-                                setFormResult(previousForm => ({
-                                    ...previousForm,
-                                    createdAt: e.target.value
-                                }));
-                            }}
-                        />
-                    </div>
+            </div>
 
-                    <div className="w-[50%]">
-                        <label >
-                            <h3 className="text-xl">Description</h3>
-                        </label>
-                        <input
-                            type="text"
-                            placeholder="description"
-                            className="border-2 p-1 w-full"
-                            value={formResult.description}
-                            onChange={(e) => {
-                                setFormResult(previousForm => ({
-                                    ...previousForm,
-                                    description: e.target.value
-                                }));
-                            }}
-                        />
-                    </div>
-                </div>
+            <div className="flex gap-3">
 
-                <div className="w-full h-auto flex justify-center items-center">
+                <button
+                    type="submit"
+                    className="flex-1 bg-black text-white py-3 rounded-xl font-bold"
+                >
+                    {isEditing ? "Save Changes" : "Create Exam"}
+                </button>
 
-                    <button type="submit" className="h-9 w-[50%] rounded-xl text-white font-bold bg-black">
-                        Submit
-                    </button>
-                </div>
+                <button
+                    type="button"
+                    onClick={onCancel}
+                    className="flex-1 bg-gray-300 py-3 rounded-xl font-bold"
+                >
+                    Cancel
+                </button>
 
-                <div className="w-6 aspect-square rounded-4xl bg-black absolute top-1 left-2">
-                </div>
-            </form>
-        </>
+            </div>
+
+        </form>
     );
 }
 

@@ -1,78 +1,142 @@
-import {useState} from "react";
-import ExamCard from '../components/examCard';
+import { useState } from "react";
+import ExamCard from "../components/examCard";
 import CreateExam from "../components/createExamCard";
-import Success from "../components/success";
+import Modal from "../components/modal";
+import PermissionGate from "../components/PermissionGate";
+import { Success } from "../components/feedBack";
 
-function Exam(){
-    const [showCreateExam,setShowCreateExam] = useState(false);
-    const [created, setCreated] = useState(false);
-    const [exams,setExams] = useState([
+function Exam() {
+    const [exams, setExams] = useState([
         {
-            subject: "PROG2",
-            topic: "Encapsulation",
-            duration : "2h",
-            dueDate : "03/01/2024",
-            createdAt : "01/01/2024", 
-            description: "A simple qcm testing students knowledges on encapsulaation and why do we need them"
+            id: 1,
+            courseId: 1,
+            title: "Encapsulation",
+            description:
+                "A simple QCM about encapsulation.",
+            startsAt: "2026-09-01T10:00",
+            endsAt: "2026-09-01T12:00"
         },
-         {
-            subject: "DONNEES2",
-            topic: "Data organisation",
-            duration : "2h",
-            dueDate : "03/01/2024",
-            createdAt : "01/01/2024", 
-            description: "A simple qcm testing students knowledges on encapsulaation and why do we need them"
-        },
-         {
-            subject: "PRO4",
-            topic: "Experience Pro",
-            duration : "2h",
-            dueDate : "03/01/2024",
-            createdAt : "01/01/2024", 
-            description: "A simple qcm testing students knowledges on encapsulaation and why do we need them"
-        },
-         {
-            subject: "WEB2",
-            topic: "ExpressJs",
-            duration : "2h",
-            dueDate : "03/01/2024",
-            createdAt : "01/01/2024", 
-            description: "A simple qcm testing students knowledges on encapsulaation and why do we need them"
-         },
-          {
-            subject: "PROG1",
-            topic: "Recursivity",
-            duration : "2h",
-            dueDate : "03/01/2024",
-            createdAt : "01/01/2024", 
-            description: "A simple qcm testing students knowledges on encapsulaation and why do we need them"
+        {
+            id: 2,
+            courseId: 3,
+            title: "Data organisation",
+            description:
+                "A test about data organisation.",
+            startsAt: "2026-09-03T10:00",
+            endsAt: "2026-09-03T12:00"
         }
     ]);
 
-    const examGrid = exams.map((e) => (
-        <ExamCard subject={e.subject} topic={e.topic} duration={e.duration} dueDate={e.dueDate} createdAt={e.createdAt} description={e.description}/>
-    ));
+    const [showCreate, setShowCreate] = useState(false);
+    const [editingExam, setEditingExam] = useState(null);
+    const [message, setMessage] = useState("");
 
-    const createNewExam = () => {
-        setShowCreateExam(prev => !prev);
+    function createExam(exam) {
+        setExams(previous => [
+            ...previous,
+            {
+                ...exam,
+                id: Date.now()
+            }
+        ]);
+
+        setShowCreate(false);
+        setMessage("Exam created successfully.");
     }
 
+    function updateExam(exam) {
+        setExams(previous =>
+            previous.map(item =>
+                item.id === exam.id
+                    ? exam
+                    : item
+            )
+        );
 
+        setEditingExam(null);
+        setMessage("Exam updated successfully.");
+    }
+
+    function deleteExam(id) {
+        if (!window.confirm("Delete this exam?")) {
+            return;
+        }
+
+        setExams(previous =>
+            previous.filter(exam => exam.id !== id)
+        );
+
+        setMessage("Exam deleted successfully.");
+    }
 
     return (
-        <>
-            <div className='w-full h-full'>
-                <div className=' w-full h-full flex flex-row flex-wrap gap-[2vw] p-2'>
-                    <div className="w-[30vw] h-70 cols-span-1 bg-gray-400 p-2 flex flex-row justify-center items-center rounded-2xl" onClick={createNewExam}>
-                        <h1 className='text-2xl font-bold'>Create New</h1>
-                    </div>
-                    { examGrid }
-                </div>
-                {showCreateExam ? <CreateExam/> : null}
-            </div>
-        </>
-    );
+        <div className="w-full min-h-screen">
 
+            <div className="flex justify-between items-center mb-5">
+
+                <h1 className="text-3xl font-bold">
+                    Exams
+                </h1>
+
+                <PermissionGate
+                    resource="exams"
+                    action="create"
+                >
+                    <button
+                        type="button"
+                        onClick={() => setShowCreate(true)}
+                        className="bg-black text-white px-5 py-3 rounded-xl font-bold"
+                    >
+                        Create New
+                    </button>
+                </PermissionGate>
+
+            </div>
+
+            {message && (
+                <div className="mb-4">
+                    <Success message={message} />
+                </div>
+            )}
+
+            <div className="flex flex-row flex-wrap items-center gap-[2vw]">
+
+                {exams.map(exam => (
+                    <ExamCard
+                        key={exam.id}
+                        exam={exam}
+                        onEdit={setEditingExam}
+                        onDelete={deleteExam}
+                    />
+                ))}
+
+            </div>
+
+            <Modal
+                open={showCreate}
+                onClose={() => setShowCreate(false)}
+            >
+                <CreateExam
+                    onSubmit={createExam}
+                    onCancel={() => setShowCreate(false)}
+                />
+            </Modal>
+
+            <Modal
+                open={Boolean(editingExam)}
+                onClose={() => setEditingExam(null)}
+            >
+                {editingExam && (
+                    <CreateExam
+                        exam={editingExam}
+                        onSubmit={updateExam}
+                        onCancel={() => setEditingExam(null)}
+                    />
+                )}
+            </Modal>
+
+        </div>
+    );
 }
 
 export default Exam;
