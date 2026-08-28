@@ -1,49 +1,24 @@
-import { NavLink, Outlet } from "react-router";
+import { Outlet } from "react-router";
+import { useAuth } from "../context/authContext";
 
 function Home() {
+
+    const { user } = useAuth();
+
     return (
         <div className="h-full w-full flex flex-col gap-5 p-2">
 
-            <h1 className="text-3xl font-bold text-gray-500">
-                HOME PAGE
-            </h1>
+            <div className="w-full flex items-center justify-between">
 
-            <nav className="w-full flex items-center gap-5">
+                <h1 className="text-3xl font-bold text-gray-500">
+                    HOME PAGE
+                </h1>
 
-                <NavLink
-                    to="students"
-                    className={({ isActive }) =>
-                        isActive
-                            ? "text-2xl border-b-2 text-gray-500"
-                            : "text-2xl"
-                    }
-                >
-                    Students
-                </NavLink>
+                <p className="font-bold">
+                    Welcome, {user?.fullName}
+                </p>
 
-                <NavLink
-                    to="exams"
-                    className={({ isActive }) =>
-                        isActive
-                            ? "text-2xl border-b-2 text-gray-500"
-                            : "text-2xl"
-                    }
-                >
-                    Exams
-                </NavLink>
-
-                <NavLink
-                    to="subjects"
-                    className={({ isActive }) =>
-                        isActive
-                            ? "text-2xl border-b-2 text-gray-500"
-                            : "text-2xl"
-                    }
-                >
-                    Subjects
-                </NavLink>
-
-            </nav>
+            </div>
 
             <Outlet />
 

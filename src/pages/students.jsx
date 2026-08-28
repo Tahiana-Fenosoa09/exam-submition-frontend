@@ -2,7 +2,7 @@ import { useState } from "react";
 import StudentCard from "../components/studentCard";
 import CreateStudent from "../components/createStudent";
 import Modal from "../components/modal";
-import PermissionGate from "../components/permissionGate";
+import PermissionGate from "../components/PermissionGate";
 import { Success, ErrorMessage } from "../components/feedBack";
 import { useAuth } from "../context/authContext";
 
